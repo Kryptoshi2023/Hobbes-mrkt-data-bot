@@ -35,41 +35,45 @@ async def update_crypto_data():
     if not category:
         category = await guild.create_category(name="$HOBBES LIVE DATA")
 
-    # Update the fully diluted valuation
-    fdv = crypto_data['market_data']['fully_diluted_valuation']['usd']
-    try:
-        market_cap_channel = discord.utils.get(guild.voice_channels, name=f"MC: ${fdv:,.0f}")
-        if market_cap_channel is None:
-            overwrites = {
-                guild.default_role: discord.PermissionOverwrite(connect=False)
-            }
-            market_cap_channel = await category.create_voice_channel(
-                name=f"MC: ${fdv:,.0f}", overwrites=overwrites, reason="Creating channel for fully diluted valuation"
-            )
-        else:
-            await market_cap_channel.edit(name=f"MC: ${fdv:,.0f}")
-    except discord.errors.Forbidden:
-        # handle the Forbidden error here
-    except discord.errors.HTTPException:
-        # handle the HTTP error here
+# Update the fully diluted valuation
+fdv = crypto_data['market_data']['fully_diluted_valuation']['usd']
+try:
+    market_cap_channel = discord.utils.get(guild.voice_channels, name=f"MC: ${fdv:,.0f}")
+    if market_cap_channel is None:
+        overwrites = {
+            guild.default_role: discord.PermissionOverwrite(connect=False)
+        }
+        market_cap_channel = await category.create_voice_channel(
+            name=f"MC: ${fdv:,.0f}", overwrites=overwrites, reason="Creating channel for fully diluted valuation"
+        )
+    else:
+        await market_cap_channel.edit(name=f"MC: ${fdv:,.0f}")
+except discord.errors.Forbidden:
+    # Handle Forbidden error here
+    pass
+except discord.errors.HTTPException:
+    # Handle HTTPException error here
+    pass
 
-    # Update the 24-hour trading volume
-    volume = crypto_data['market_data']['total_volume']['usd']
-    try:
-        volume_channel = discord.utils.get(guild.voice_channels, name=f"24h Vol: ${volume:,.0f}")
-        if volume_channel is None:
-            overwrites = {
-                guild.default_role: discord.PermissionOverwrite(connect=False)
-            }
-            volume_channel = await category.create_voice_channel(
-                name=f"24h Vol: ${volume:,.0f}", overwrites=overwrites, reason="Creating channel for 24-hour trading volume"
-            )
-        else:
-            await volume_channel.edit(name=f"24h Vol: ${volume:,.0f}")
-    except discord.errors.Forbidden:
-        # handle the Forbidden error here
-    except discord.errors.HTTPException:
-        # handle the HTTP error here
+# Update the 24-hour trading volume
+volume = crypto_data['market_data']['total_volume']['usd']
+try:
+    volume_channel = discord.utils.get(guild.voice_channels, name=f"24h Vol: ${volume:,.0f}")
+    if volume_channel is None:
+        overwrites = {
+            guild.default_role: discord.PermissionOverwrite(connect=False)
+        }
+        volume_channel = await category.create_voice_channel(
+            name=f"24h Vol: ${volume:,.0f}", overwrites=overwrites, reason="Creating channel for 24-hour trading volume"
+        )
+    else:
+        await volume_channel.edit(name=f"24h Vol: ${volume:,.0f}")
+except discord.errors.Forbidden:
+    # Handle Forbidden error here
+    pass
+except discord.errors.HTTPException:
+    # Handle HTTPException error here
+    pass
 
 @bot.event
 async def on_command_error(ctx, error):
